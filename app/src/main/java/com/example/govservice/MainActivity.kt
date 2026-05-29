@@ -3,7 +3,10 @@ package com.example.govservice
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.example.govservice.fragments.ChatFragment
 import com.example.govservice.fragments.CreateApplicationFragment
+import com.example.govservice.fragments.EditProfileFragment
 import com.example.govservice.fragments.EmployeeApplicationsFragment
 import com.example.govservice.fragments.LoginFragment
 import com.example.govservice.fragments.MyApplicationsFragment
@@ -42,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openLoginScreen() {
-        supportFragmentManager.popBackStack()
+        clearBackStack()
         replaceFragment(LoginFragment(), false)
     }
 
@@ -51,12 +54,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openServicesScreen() {
-        supportFragmentManager.popBackStack()
+        clearBackStack()
         replaceFragment(ServicesFragment(), false)
     }
 
     fun openEmployeeApplicationsScreen() {
-        supportFragmentManager.popBackStack()
+        clearBackStack()
         replaceFragment(EmployeeApplicationsFragment(), false)
     }
 
@@ -75,6 +78,26 @@ class MainActivity : AppCompatActivity() {
 
     fun openProfileScreen() {
         replaceFragment(ProfileFragment(), true)
+    }
+
+    fun openEditProfileScreen() {
+        replaceFragment(EditProfileFragment(), true)
+    }
+
+    fun openChatScreen(applicationId: Int, title: String) {
+        val fragment = ChatFragment.newInstance(
+            applicationId = applicationId,
+            title = title
+        )
+
+        replaceFragment(fragment, true)
+    }
+
+    private fun clearBackStack() {
+        supportFragmentManager.popBackStack(
+            null,
+            FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
     }
 
     private fun replaceFragment(fragment: Fragment, addToBackStack: Boolean) {

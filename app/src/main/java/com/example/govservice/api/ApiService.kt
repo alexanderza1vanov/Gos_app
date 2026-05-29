@@ -1,5 +1,7 @@
 package com.example.govservice.api
 
+import com.example.govservice.dto.ChatMessageResponse
+import com.example.govservice.dto.SendMessageRequest
 import com.example.govservice.dto.ApplicationResponse
 import com.example.govservice.dto.AuthResponse
 import com.example.govservice.dto.CreateApplicationRequest
@@ -7,6 +9,7 @@ import com.example.govservice.dto.LoginRequest
 import com.example.govservice.dto.MessageResponse
 import com.example.govservice.dto.RegisterRequest
 import com.example.govservice.dto.ServiceResponse
+import com.example.govservice.dto.UpdateProfileRequest
 import com.example.govservice.dto.UpdateStatusRequest
 import com.example.govservice.dto.UserResponse
 import retrofit2.Call
@@ -34,6 +37,12 @@ interface ApiService {
         @Header("Authorization") token: String
     ): Call<UserResponse>
 
+    @PATCH("profile")
+    fun updateProfile(
+        @Header("Authorization") token: String,
+        @Body request: UpdateProfileRequest
+    ): Call<MessageResponse>
+
     @GET("services")
     fun getServices(
         @Header("Authorization") token: String
@@ -54,6 +63,19 @@ interface ApiService {
     fun getAllApplications(
         @Header("Authorization") token: String
     ): Call<List<ApplicationResponse>>
+
+    @GET("applications/{id}/messages")
+    fun getMessages(
+        @Header("Authorization") token: String,
+        @Path("id") applicationId: Int
+    ): Call<List<ChatMessageResponse>>
+
+    @POST("applications/{id}/messages")
+    fun sendMessage(
+        @Header("Authorization") token: String,
+        @Path("id") applicationId: Int,
+        @Body request: SendMessageRequest
+    ): Call<ChatMessageResponse>
 
     @PATCH("applications/{id}/status")
     fun updateApplicationStatus(

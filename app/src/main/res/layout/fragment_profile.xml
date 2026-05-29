@@ -10,6 +10,17 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/smallBackButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="← Назад"
+            android:textAllCaps="false"
+            android:textColor="#6C4AB6"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -96,14 +107,14 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/backButton"
+            android:id="@+id/editProfileButton"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="24dp"
-            android:backgroundTint="#EEE7FF"
-            android:text="Назад"
+            android:backgroundTint="#6C4AB6"
+            android:text="Редактировать профиль"
             android:textAllCaps="false"
-            android:textColor="#6C4AB6"
+            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -112,10 +123,10 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="12dp"
-            android:backgroundTint="#6C4AB6"
+            android:backgroundTint="#EEE7FF"
             android:text="Выйти из аккаунта"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="#6C4AB6"
             android:textSize="16sp"
             android:textStyle="bold" />
 

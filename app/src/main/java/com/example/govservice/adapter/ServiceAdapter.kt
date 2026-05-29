@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.govservice.R
 import com.example.govservice.dto.ServiceResponse
 
-class ServiceAdapter(
+    class ServiceAdapter(
     private var items: List<ServiceResponse>,
     private val onClick: (ServiceResponse) -> Unit
 ) : RecyclerView.Adapter<ServiceAdapter.ServiceViewHolder>() {

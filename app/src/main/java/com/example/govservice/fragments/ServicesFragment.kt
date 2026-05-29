@@ -22,10 +22,20 @@ class ServicesFragment : Fragment(R.layout.fragment_services) {
     private lateinit var tokenManager: TokenManager
     private lateinit var adapter: ServiceAdapter
 
+    private var allServices: List<ServiceResponse> = emptyList()
+    private var selectedCategory: String = "Справки"
+
+    private var servicesCall: Call<List<ServiceResponse>>? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         tokenManager = TokenManager(requireContext())
 
         val servicesRecyclerView = view.findViewById<RecyclerView>(R.id.servicesRecyclerView)
+
+        val certificatesButton = view.findViewById<MaterialButton>(R.id.certificatesButton)
+        val socialButton = view.findViewById<MaterialButton>(R.id.socialButton)
+        val appointmentButton = view.findViewById<MaterialButton>(R.id.appointmentButton)
+
         val myApplicationsButton = view.findViewById<MaterialButton>(R.id.myApplicationsButton)
         val profileButton = view.findViewById<MaterialButton>(R.id.profileButton)
 
@@ -39,6 +49,24 @@ class ServicesFragment : Fragment(R.layout.fragment_services) {
         servicesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         servicesRecyclerView.adapter = adapter
 
+        certificatesButton.setOnClickListener {
+            selectedCategory = "Справки"
+            updateCategoryButtons(certificatesButton, socialButton, appointmentButton)
+            filterServices()
+        }
+
+        socialButton.setOnClickListener {
+            selectedCategory = "Социальные услуги"
+            updateCategoryButtons(socialButton, certificatesButton, appointmentButton)
+            filterServices()
+        }
+
+        appointmentButton.setOnClickListener {
+            selectedCategory = "Запись на приём"
+            updateCategoryButtons(appointmentButton, certificatesButton, socialButton)
+            filterServices()
+        }
+
         myApplicationsButton.setOnClickListener {
             (requireActivity() as MainActivity).openMyApplicationsScreen()
         }
@@ -47,24 +75,71 @@ class ServicesFragment : Fragment(R.layout.fragment_services) {
             (requireActivity() as MainActivity).openProfileScreen()
         }
 
+        updateCategoryButtons(certificatesButton, socialButton, appointmentButton)
         loadServices()
     }
 
+    override fun onDestroyView() {
+        servicesCall?.cancel()
+        servicesCall = null
+        super.onDestroyView()
+    }
+
     private fun loadServices() {
-        ApiClient.apiService.getServices(
+        servicesCall?.cancel()
+
+        servicesCall = ApiClient.apiService.getServices(
             tokenManager.getBearerToken()
-        ).enqueue(object : Callback<List<ServiceResponse>> {
-            override fun onResponse(call: Call<List<ServiceResponse>>, response: Response<List<ServiceResponse>>) {
+        )
+
+        servicesCall?.enqueue(object : Callback<List<ServiceResponse>> {
+            override fun onResponse(
+                call: Call<List<ServiceResponse>>,
+                response: Response<List<ServiceResponse>>
+            ) {
+                if (!isAdded || !tokenManager.isLoggedIn()) return
+
                 if (response.isSuccessful && response.body() != null) {
-                    adapter.updateItems(response.body()!!)
+                    allServices = response.body()!!
+                    filterServices()
                 } else {
-                    Toast.makeText(requireContext(), "Ошибка загрузки услуг", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Ошибка загрузки услуг",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<List<ServiceResponse>>, t: Throwable) {
-                Toast.makeText(requireContext(), "Ошибка соединения: ${t.message}", Toast.LENGTH_SHORT).show()
+                if (call.isCanceled || !isAdded || !tokenManager.isLoggedIn()) return
+
+                Toast.makeText(
+                    requireContext(),
+                    "Ошибка соединения: ${t.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
+    }
+
+    private fun filterServices() {
+        val filtered = allServices.filter { it.category == selectedCategory }
+        adapter.updateItems(filtered)
+    }
+
+    private fun updateCategoryButtons(
+        activeButton: MaterialButton,
+        button2: MaterialButton,
+        button3: MaterialButton
+    ) {
+        activeButton.setBackgroundColor(resources.getColor(R.color.primary_purple, null))
+        activeButton.setTextColor(resources.getColor(R.color.white, null))
+
+        button2.setBackgroundColor(resources.getColor(R.color.white, null))
+        button2.setTextColor(resources.getColor(R.color.primary_purple, null))
+
+        button3.setBackgroundColor(resources.getColor(R.color.white, null))
+        button3.setTextColor(resources.getColor(R.color.primary_purple, null))
     }
 }

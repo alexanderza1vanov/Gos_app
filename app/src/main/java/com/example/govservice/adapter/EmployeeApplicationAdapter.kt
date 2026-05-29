@@ -11,7 +11,8 @@ import com.google.android.material.button.MaterialButton
 
 class EmployeeApplicationAdapter(
     private var items: List<ApplicationResponse>,
-    private val onStatusClick: (ApplicationResponse, String) -> Unit
+    private val onStatusClick: (ApplicationResponse, String) -> Unit,
+    private val onClick: (ApplicationResponse) -> Unit
 ) : RecyclerView.Adapter<EmployeeApplicationAdapter.EmployeeApplicationViewHolder>() {
 
     class EmployeeApplicationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -24,7 +25,10 @@ class EmployeeApplicationAdapter(
         val rejectButton: MaterialButton = view.findViewById(R.id.rejectButton)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmployeeApplicationViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): EmployeeApplicationViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_employee_application, parent, false)
 
@@ -51,9 +55,15 @@ class EmployeeApplicationAdapter(
         holder.rejectButton.setOnClickListener {
             onStatusClick(application, "REJECTED")
         }
+
+        holder.itemView.setOnClickListener {
+            onClick(application)
+        }
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int {
+        return items.size
+    }
 
     fun updateItems(newItems: List<ApplicationResponse>) {
         items = newItems

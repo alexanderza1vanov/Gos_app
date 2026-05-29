@@ -16,16 +16,16 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Государственные услуги"
+            android:text="ГосУслуга"
             android:textColor="#FFFFFF"
-            android:textSize="27sp"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Подайте заявление онлайн и отслеживайте его статус"
+            android:text="Выберите категорию услуги и подайте заявление онлайн"
             android:textColor="#EDE7FF"
             android:textSize="15sp" />
 
@@ -36,32 +36,30 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="-24dp"
         android:orientation="horizontal"
-        android:paddingHorizontal="8dp">
+        android:paddingHorizontal="6dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/myApplicationsButton"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="6dp"
             android:layout_weight="1"
             android:backgroundTint="#FFFFFF"
-            android:text="Мои заявления"
+            android:text="Заявления"
             android:textAllCaps="false"
             android:textColor="#6C4AB6"
-            android:textSize="15sp"
             android:textStyle="bold" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/profileButton"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="6dp"
             android:layout_weight="1"
             android:backgroundTint="#FFFFFF"
             android:text="Профиль"
             android:textAllCaps="false"
             android:textColor="#6C4AB6"
-            android:textSize="15sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -70,7 +68,58 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Доступные услуги"
+        android:text="Категории"
+        android:textColor="#2F2A3A"
+        android:textSize="21sp"
+        android:textStyle="bold" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/certificatesButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginEnd="10dp"
+                android:text="Справки"
+                android:textAllCaps="false"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/socialButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginEnd="10dp"
+                android:text="Социальные услуги"
+                android:textAllCaps="false"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/appointmentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Запись на приём"
+                android:textAllCaps="false"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:text="Услуги"
         android:textColor="#2F2A3A"
         android:textSize="21sp"
         android:textStyle="bold" />

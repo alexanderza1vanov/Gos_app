@@ -27,13 +27,21 @@ class EmployeeApplicationsFragment : Fragment(R.layout.fragment_employee_applica
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         tokenManager = TokenManager(requireContext())
 
-        val applicationsRecyclerView = view.findViewById<RecyclerView>(R.id.employeeApplicationsRecyclerView)
+        val applicationsRecyclerView =
+            view.findViewById<RecyclerView>(R.id.employeeApplicationsRecyclerView)
+
         val profileButton = view.findViewById<MaterialButton>(R.id.profileButton)
 
         adapter = EmployeeApplicationAdapter(
             items = emptyList(),
             onStatusClick = { application, status ->
                 updateStatus(application.id, status)
+            },
+            onClick = { application ->
+                (requireActivity() as MainActivity).openChatScreen(
+                    application.id,
+                    "Заявление №${application.id}"
+                )
             }
         )
 
@@ -58,12 +66,20 @@ class EmployeeApplicationsFragment : Fragment(R.layout.fragment_employee_applica
                 if (response.isSuccessful && response.body() != null) {
                     adapter.updateItems(response.body()!!)
                 } else {
-                    Toast.makeText(requireContext(), "Ошибка загрузки заявлений", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Ошибка загрузки заявлений",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<List<ApplicationResponse>>, t: Throwable) {
-                Toast.makeText(requireContext(), "Ошибка соединения: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Ошибка соединения: ${t.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
@@ -86,17 +102,32 @@ class EmployeeApplicationsFragment : Fragment(R.layout.fragment_employee_applica
             applicationId,
             request
         ).enqueue(object : Callback<MessageResponse> {
-            override fun onResponse(call: Call<MessageResponse>, response: Response<MessageResponse>) {
+            override fun onResponse(
+                call: Call<MessageResponse>,
+                response: Response<MessageResponse>
+            ) {
                 if (response.isSuccessful) {
-                    Toast.makeText(requireContext(), "Статус обновлён", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Статус обновлён",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     loadApplications()
                 } else {
-                    Toast.makeText(requireContext(), "Ошибка обновления статуса", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Ошибка обновления статуса",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
-                Toast.makeText(requireContext(), "Ошибка соединения: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Ошибка соединения: ${t.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }

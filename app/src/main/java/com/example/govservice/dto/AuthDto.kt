@@ -23,5 +23,16 @@ data class UserResponse(
     val fullName: String,
     val email: String,
     val phone: String,
-    val role: String
+    val role: String,
+    val birthDate: String?,
+    val passportData: String?,
+    val address: String?
+)
+
+data class UpdateProfileRequest(
+    val fullName: String,
+    val phone: String,
+    val birthDate: String,
+    val passportData: String,
+    val address: String
 )

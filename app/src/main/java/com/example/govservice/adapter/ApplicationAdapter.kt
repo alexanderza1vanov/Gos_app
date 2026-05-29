@@ -9,7 +9,8 @@ import com.example.govservice.R
 import com.example.govservice.dto.ApplicationResponse
 
 class ApplicationAdapter(
-    private var items: List<ApplicationResponse>
+    private var items: List<ApplicationResponse>,
+    private val onClick: (ApplicationResponse) -> Unit
 ) : RecyclerView.Adapter<ApplicationAdapter.ApplicationViewHolder>() {
 
     class ApplicationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -35,9 +36,15 @@ class ApplicationAdapter(
         holder.dateTextView.text = "Дата подачи: ${formatDate(application.createdAt)}"
         holder.applicantTextView.text = application.serviceTitle
         holder.commentTextView.text = application.employeeComment ?: "Комментарий отсутствует"
+
+        holder.itemView.setOnClickListener {
+            onClick(application)
+        }
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int {
+        return items.size
+    }
 
     fun updateItems(newItems: List<ApplicationResponse>) {
         items = newItems

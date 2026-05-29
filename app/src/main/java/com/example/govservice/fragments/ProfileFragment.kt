@@ -18,6 +18,7 @@ import retrofit2.Response
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private lateinit var tokenManager: TokenManager
+    private var profileCall: Call<UserResponse>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         tokenManager = TokenManager(requireContext())
@@ -28,22 +29,32 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val phoneTextView = view.findViewById<TextView>(R.id.phoneTextView)
         val roleTextView = view.findViewById<TextView>(R.id.roleTextView)
 
-        val backButton = view.findViewById<MaterialButton>(R.id.backButton)
+        val smallBackButton = view.findViewById<MaterialButton>(R.id.smallBackButton)
+        val editProfileButton = view.findViewById<MaterialButton>(R.id.editProfileButton)
         val logoutButton = view.findViewById<MaterialButton>(R.id.logoutButton)
 
-        backButton.setOnClickListener {
+        smallBackButton.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
+        editProfileButton.setOnClickListener {
+            (requireActivity() as MainActivity).openEditProfileScreen()
+        }
+
         logoutButton.setOnClickListener {
+            profileCall?.cancel()
             tokenManager.clearToken()
             (requireActivity() as MainActivity).openLoginScreen()
         }
 
-        ApiClient.apiService.getProfile(
+        profileCall = ApiClient.apiService.getProfile(
             tokenManager.getBearerToken()
-        ).enqueue(object : Callback<UserResponse> {
+        )
+
+        profileCall?.enqueue(object : Callback<UserResponse> {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                if (!isAdded || !tokenManager.isLoggedIn()) return
+
                 val user = response.body()
 
                 if (response.isSuccessful && user != null) {
@@ -58,9 +69,17 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             }
 
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                if (call.isCanceled || !isAdded || !tokenManager.isLoggedIn()) return
+
                 Toast.makeText(requireContext(), "Ошибка соединения: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    override fun onDestroyView() {
+        profileCall?.cancel()
+        profileCall = null
+        super.onDestroyView()
     }
 
     private fun translateRole(role: String): String {

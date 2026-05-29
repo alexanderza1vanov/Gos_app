@@ -6,11 +6,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.govservice.MainActivity
 import com.example.govservice.R
 import com.example.govservice.adapter.ApplicationAdapter
 import com.example.govservice.api.ApiClient
 import com.example.govservice.dto.ApplicationResponse
 import com.example.govservice.util.TokenManager
+import com.google.android.material.button.MaterialButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,7 +27,17 @@ class MyApplicationsFragment : Fragment(R.layout.fragment_my_applications) {
 
         val applicationsRecyclerView = view.findViewById<RecyclerView>(R.id.applicationsRecyclerView)
 
-        adapter = ApplicationAdapter(emptyList())
+        val smallBackButton = view.findViewById<MaterialButton>(R.id.smallBackButton)
+
+        smallBackButton.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+        adapter = ApplicationAdapter(emptyList()) { application ->
+            (requireActivity() as MainActivity).openChatScreen(
+                application.id,
+                "Заявление №${application.id}"
+            )
+        }
 
         applicationsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         applicationsRecyclerView.adapter = adapter
@@ -44,12 +56,20 @@ class MyApplicationsFragment : Fragment(R.layout.fragment_my_applications) {
                 if (response.isSuccessful && response.body() != null) {
                     adapter.updateItems(response.body()!!)
                 } else {
-                    Toast.makeText(requireContext(), "Ошибка загрузки заявлений", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Ошибка загрузки заявлений",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<List<ApplicationResponse>>, t: Throwable) {
-                Toast.makeText(requireContext(), "Ошибка соединения: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Ошибка соединения: ${t.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
